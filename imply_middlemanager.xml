@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<zabbix_export>
+    <version>4.4</version>
+    <date>2020-04-25T12:53:23Z</date>
+    <groups>
+        <group>
+            <name>Templates</name>
+        </group>
+    </groups>
+    <templates>
+        <template>
+            <template>Template Imply MiddleManager</template>
+            <name>Template Imply MiddleManager</name>
+            <description>Imply Zabbix template&#13;
+&#13;
+https://github.com/lgn87/zabbix-imply-template</description>
+            <groups>
+                <group>
+                    <name>Templates</name>
+                </group>
+            </groups>
+            <applications>
+                <application>
+                    <name>Imply</name>
+                </application>
+            </applications>
+            <items>
+                <item>
+                    <name>Imply MiddleManager status</name>
+                    <type>SIMPLE</type>
+                    <key>net.tcp.service[tcp,,8091]</key>
+                    <history>1w</history>
+                    <applications>
+                        <application>
+                            <name>Imply</name>
+                        </application>
+                    </applications>
+                    <triggers>
+                        <trigger>
+                            <expression>{last(#3)}&lt;&gt;1</expression>
+                            <name>Imply MiddleManager is down on {HOST.NAME}</name>
+                            <priority>AVERAGE</priority>
+                        </trigger>
+                    </triggers>
+                </item>
+            </items>
+            <httptests>
+                <httptest>
+                    <name>Imply MiddleManager</name>
+                    <application>
+                        <name>Imply</name>
+                    </application>
+                    <authentication>BASIC</authentication>
+                    <http_user>{$IMPLY_USER}</http_user>
+                    <http_password>{$IMPLY_PASSWORD}</http_password>
+                    <steps>
+                        <step>
+                            <name>Imply MiddleManager</name>
+                            <url>http://{HOST.IP}:8091/status/health</url>
+                            <follow_redirects>NO</follow_redirects>
+                            <required>true</required>
+                            <status_codes>200</status_codes>
+                        </step>
+                    </steps>
+                </httptest>
+                <httptest>
+                    <name>Imply MiddleManager2</name>
+                    <application>
+                        <name>Imply</name>
+                    </application>
+                    <authentication>BASIC</authentication>
+                    <http_user>{$IMPLY_USER}</http_user>
+                    <http_password>{$IMPLY_PASSWORD}</http_password>
+                    <steps>
+                        <step>
+                            <name>Imply MiddleManager2</name>
+                            <url>http://{HOST.IP}:8091/status/selfDiscovered/status</url>
+                            <follow_redirects>NO</follow_redirects>
+                            <required>true</required>
+                            <status_codes>200</status_codes>
+                        </step>
+                    </steps>
+                </httptest>
+                <httptest>
+                    <name>Imply MiddleManager Enabled State</name>
+                    <application>
+                        <name>Imply</name>
+                    </application>
+                    <authentication>BASIC</authentication>
+                    <http_user>{$IMPLY_USER}</http_user>
+                    <http_password>{$IMPLY_PASSWORD}</http_password>
+                    <steps>
+                        <step>
+                            <name>Imply MiddleManager Enabled State</name>
+                            <url>http://{HOST.IP}:8091/druid/worker/v1/enabled</url>
+                            <follow_redirects>NO</follow_redirects>
+                            <required>true</required>
+                            <status_codes>200</status_codes>
+                        </step>
+                    </steps>
+                </httptest>
+            </httptests>
+            <macros>
+                <macro>
+                    <macro>{$IMPLY_PASSWORD}</macro>
+                    <value>PASSWORD</value>
+                </macro>
+                <macro>
+                    <macro>{$IMPLY_USER}</macro>
+                    <value>zabbix</value>
+                </macro>
+            </macros>
+        </template>
+    </templates>
+    <triggers>
+        <trigger>
+            <expression>{Template Imply MiddleManager:web.test.rspcode[Imply MiddleManager2,Imply MiddleManager2].last(#3)}&lt;&gt;200</expression>
+            <name>Imply MiddleManager2 response code &lt;&gt; 200</name>
+            <priority>AVERAGE</priority>
+        </trigger>
+        <trigger>
+            <expression>{Template Imply MiddleManager:web.test.rspcode[Imply MiddleManager Enabled State,Imply MiddleManager Enabled State].last(#3)}&lt;&gt;200</expression>
+            <name>Imply MiddleManager Enabled State response code &lt;&gt; 200</name>
+            <priority>AVERAGE</priority>
+        </trigger>
+        <trigger>
+            <expression>{Template Imply MiddleManager:web.test.rspcode[Imply MiddleManager,Imply MiddleManager].last(#3)}&lt;&gt;200</expression>
+            <name>Imply MiddleManager response code &lt;&gt; 200</name>
+            <priority>AVERAGE</priority>
+        </trigger>
+        <trigger>
+            <expression>{Template Imply MiddleManager:web.test.fail[Imply MiddleManager].last(#3)}&gt;0</expression>
+            <name>Web check failed on Imply MiddleManager</name>
+            <priority>AVERAGE</priority>
+        </trigger>
+        <trigger>
+            <expression>{Template Imply MiddleManager:web.test.fail[Imply MiddleManager2].last(#3)}&gt;0</expression>
+            <name>Web check failed on Imply MiddleManager2</name>
+            <priority>AVERAGE</priority>
+        </trigger>
+        <trigger>
+            <expression>{Template Imply MiddleManager:web.test.fail[Imply MiddleManager Enabled State].last(#3)}&gt;0</expression>
+            <name>Web check failed on Imply MiddleManager Enabled State</name>
+            <priority>AVERAGE</priority>
+        </trigger>
+    </triggers>
+</zabbix_export>

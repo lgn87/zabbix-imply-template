@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<zabbix_export>
+    <version>4.4</version>
+    <date>2020-04-25T12:52:55Z</date>
+    <groups>
+        <group>
+            <name>Templates</name>
+        </group>
+    </groups>
+    <templates>
+        <template>
+            <template>Template Imply Coordinator</template>
+            <name>Template Imply Coordinator</name>
+            <description>Imply Zabbix template&#13;
+&#13;
+https://github.com/lgn87/zabbix-imply-template</description>
+            <groups>
+                <group>
+                    <name>Templates</name>
+                </group>
+            </groups>
+            <applications>
+                <application>
+                    <name>Imply</name>
+                </application>
+            </applications>
+            <items>
+                <item>
+                    <name>Imply Coordinator Load Status</name>
+                    <key>imply.coordinator.loadstatus[{HOST.IP}]</key>
+                    <history>1w</history>
+                    <applications>
+                        <application>
+                            <name>Imply</name>
+                        </application>
+                    </applications>
+                    <triggers>
+                        <trigger>
+                            <expression>{min(#3)}&lt;&gt;0</expression>
+                            <name>Imply Coordinator Load Status &gt; 0 on {HOST.NAME}</name>
+                            <priority>AVERAGE</priority>
+                        </trigger>
+                    </triggers>
+                </item>
+                <item>
+                    <name>Imply Coordinator status</name>
+                    <type>SIMPLE</type>
+                    <key>net.tcp.service[tcp,,8081]</key>
+                    <history>1w</history>
+                    <applications>
+                        <application>
+                            <name>Imply</name>
+                        </application>
+                    </applications>
+                    <triggers>
+                        <trigger>
+                            <expression>{last(#3)}&lt;&gt;1</expression>
+                            <name>Imply Coordinator is down on {HOST.NAME}</name>
+                            <priority>AVERAGE</priority>
+                        </trigger>
+                    </triggers>
+                </item>
+            </items>
+            <httptests>
+                <httptest>
+                    <name>Imply Coordinator</name>
+                    <application>
+                        <name>Imply</name>
+                    </application>
+                    <authentication>BASIC</authentication>
+                    <http_user>{$IMPLY_USER}</http_user>
+                    <http_password>{$IMPLY_PASSWORD}</http_password>
+                    <steps>
+                        <step>
+                            <name>Imply Coordinator</name>
+                            <url>http://{HOST.IP}:8083/status/health</url>
+                            <follow_redirects>NO</follow_redirects>
+                            <required>true</required>
+                            <status_codes>200</status_codes>
+                        </step>
+                    </steps>
+                </httptest>
+                <httptest>
+                    <name>Imply Coordinator2</name>
+                    <application>
+                        <name>Imply</name>
+                    </application>
+                    <authentication>BASIC</authentication>
+                    <http_user>{$IMPLY_USER}</http_user>
+                    <http_password>{$IMPLY_PASSWORD}</http_password>
+                    <steps>
+                        <step>
+                            <name>Imply Coordinator2</name>
+                            <url>http://{HOST.IP}:8083/status/selfDiscovered/status</url>
+                            <follow_redirects>NO</follow_redirects>
+                            <required>true</required>
+                            <status_codes>200</status_codes>
+                        </step>
+                    </steps>
+                </httptest>
+                <httptest>
+                    <name>Imply Coordinator Leader</name>
+                    <application>
+                        <name>Imply</name>
+                    </application>
+                    <authentication>BASIC</authentication>
+                    <http_user>{$IMPLY_USER}</http_user>
+                    <http_password>{$IMPLY_PASSWORD}</http_password>
+                    <steps>
+                        <step>
+                            <name>Imply Coordinator Leader</name>
+                            <url>http://{HOST.IP}:8081/druid/coordinator/v1/isLeader</url>
+                            <follow_redirects>NO</follow_redirects>
+                            <required>true</required>
+                            <status_codes>200</status_codes>
+                        </step>
+                    </steps>
+                </httptest>
+            </httptests>
+            <macros>
+                <macro>
+                    <macro>{$IMPLY_PASSWORD}</macro>
+                    <value>PASSWORD</value>
+                </macro>
+                <macro>
+                    <macro>{$IMPLY_USER}</macro>
+                    <value>zabbix</value>
+                </macro>
+            </macros>
+        </template>
+    </templates>
+    <triggers>
+        <trigger>
+            <expression>{Template Imply Coordinator:web.test.rspcode[Imply Coordinator2,Imply Coordinator2].last(#3)}&lt;&gt;200</expression>
+            <name>Imply Coordinator2 response code &lt;&gt; 200</name>
+            <priority>HIGH</priority>
+        </trigger>
+        <trigger>
+            <expression>{Template Imply Coordinator:web.test.rspcode[Imply Coordinator Leader,Imply Coordinator Leader].last(#3)}&lt;&gt;200</expression>
+            <name>Imply Coordinator Leader response code &lt;&gt; 200</name>
+            <priority>AVERAGE</priority>
+        </trigger>
+        <trigger>
+            <expression>{Template Imply Coordinator:web.test.rspcode[Imply Coordinator,Imply Coordinator].last(#3)}&lt;&gt;200</expression>
+            <name>Imply Coordinator response code &lt;&gt; 200</name>
+            <priority>AVERAGE</priority>
+        </trigger>
+        <trigger>
+            <expression>{Template Imply Coordinator:web.test.fail[Imply Coordinator].last(#3)}&gt;0</expression>
+            <name>Web check failed on Imply Coordinator</name>
+            <priority>AVERAGE</priority>
+        </trigger>
+        <trigger>
+            <expression>{Template Imply Coordinator:web.test.fail[Imply Coordinator2].last(#3)}&gt;0</expression>
+            <name>Web check failed on Imply Coordinator2</name>
+            <priority>HIGH</priority>
+        </trigger>
+        <trigger>
+            <expression>{Template Imply Coordinator:web.test.fail[Imply Coordinator Leader].last(#3)}&gt;0</expression>
+            <name>Web check failed on Imply Coordinator Leader</name>
+            <priority>AVERAGE</priority>
+        </trigger>
+    </triggers>
+</zabbix_export>

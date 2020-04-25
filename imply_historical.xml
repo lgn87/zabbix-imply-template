@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<zabbix_export>
+    <version>4.4</version>
+    <date>2020-04-25T12:53:09Z</date>
+    <groups>
+        <group>
+            <name>Templates</name>
+        </group>
+    </groups>
+    <templates>
+        <template>
+            <template>Template Imply Historical</template>
+            <name>Template Imply Historical</name>
+            <description>Imply Zabbix template&#13;
+&#13;
+https://github.com/lgn87/zabbix-imply-template</description>
+            <groups>
+                <group>
+                    <name>Templates</name>
+                </group>
+            </groups>
+            <applications>
+                <application>
+                    <name>Imply</name>
+                </application>
+            </applications>
+            <items>
+                <item>
+                    <name>Imply Historical status</name>
+                    <type>SIMPLE</type>
+                    <key>net.tcp.service[tcp,,8083]</key>
+                    <history>1w</history>
+                    <applications>
+                        <application>
+                            <name>Imply</name>
+                        </application>
+                    </applications>
+                    <triggers>
+                        <trigger>
+                            <expression>{last(#3)}&lt;&gt;1</expression>
+                            <name>Imply Historical is down on {HOST.NAME}</name>
+                            <priority>AVERAGE</priority>
+                        </trigger>
+                    </triggers>
+                </item>
+            </items>
+            <httptests>
+                <httptest>
+                    <name>Imply Historical</name>
+                    <application>
+                        <name>Imply</name>
+                    </application>
+                    <authentication>BASIC</authentication>
+                    <http_user>{$IMPLY_USER}</http_user>
+                    <http_password>{$IMPLY_PASSWORD}</http_password>
+                    <steps>
+                        <step>
+                            <name>Imply Historical</name>
+                            <url>http://{HOST.IP}:8083/status/health</url>
+                            <follow_redirects>NO</follow_redirects>
+                            <required>true</required>
+                            <status_codes>200</status_codes>
+                        </step>
+                    </steps>
+                </httptest>
+                <httptest>
+                    <name>Imply Historical2</name>
+                    <application>
+                        <name>Imply</name>
+                    </application>
+                    <authentication>BASIC</authentication>
+                    <http_user>{$IMPLY_USER}</http_user>
+                    <http_password>{$IMPLY_PASSWORD}</http_password>
+                    <steps>
+                        <step>
+                            <name>Imply Historical2</name>
+                            <url>http://{HOST.IP}:8083/status/selfDiscovered/status</url>
+                            <follow_redirects>NO</follow_redirects>
+                            <required>true</required>
+                            <status_codes>200</status_codes>
+                        </step>
+                    </steps>
+                </httptest>
+                <httptest>
+                    <name>Imply Historical Load Status</name>
+                    <application>
+                        <name>Imply</name>
+                    </application>
+                    <authentication>BASIC</authentication>
+                    <http_user>{$IMPLY_USER}</http_user>
+                    <http_password>{$IMPLY_PASSWORD}</http_password>
+                    <steps>
+                        <step>
+                            <name>Imply Historical Load Status</name>
+                            <url>http://{HOST.IP}:8083/druid/historical/v1/loadstatus</url>
+                            <follow_redirects>NO</follow_redirects>
+                            <required>true</required>
+                            <status_codes>200</status_codes>
+                        </step>
+                    </steps>
+                </httptest>
+            </httptests>
+            <macros>
+                <macro>
+                    <macro>{$IMPLY_PASSWORD}</macro>
+                    <value>PASSWORD</value>
+                </macro>
+                <macro>
+                    <macro>{$IMPLY_USER}</macro>
+                    <value>zabbix</value>
+                </macro>
+            </macros>
+        </template>
+    </templates>
+    <triggers>
+        <trigger>
+            <expression>{Template Imply Historical:web.test.rspcode[Imply Historical2,Imply Historical2].last(#3)}&lt;&gt;200</expression>
+            <name>Imply Historical2 response code &lt;&gt; 200</name>
+            <priority>AVERAGE</priority>
+        </trigger>
+        <trigger>
+            <expression>{Template Imply Historical:web.test.rspcode[Imply Historical Load Status,Imply Historical Load Status].last(#3)}&lt;&gt;200</expression>
+            <name>Imply Historical Load Status response code &lt;&gt; 200</name>
+            <priority>AVERAGE</priority>
+        </trigger>
+        <trigger>
+            <expression>{Template Imply Historical:web.test.rspcode[Imply Historical,Imply Historical].last(#3)}&lt;&gt;200</expression>
+            <name>Imply Historical response code &lt;&gt; 200</name>
+            <priority>AVERAGE</priority>
+        </trigger>
+        <trigger>
+            <expression>{Template Imply Historical:web.test.fail[Imply Historical].last(#3)}&gt;0</expression>
+            <name>Web check failed on Imply Historical</name>
+            <priority>AVERAGE</priority>
+        </trigger>
+        <trigger>
+            <expression>{Template Imply Historical:web.test.fail[Imply Historical2].last(#3)}&gt;0</expression>
+            <name>Web check failed on Imply Historical2</name>
+            <priority>AVERAGE</priority>
+        </trigger>
+        <trigger>
+            <expression>{Template Imply Historical:web.test.fail[Imply Historical Load Status].last(#3)}&gt;0</expression>
+            <name>Web check failed on Imply Historical Load Status</name>
+            <priority>AVERAGE</priority>
+        </trigger>
+    </triggers>
+</zabbix_export>
