@@ -9,7 +9,7 @@ value=$(echo $json | jq . | grep -v { | grep -v } | cut -f2 -d":" | cut -f1 -d",
 
 if [ -z $value ];
 then
-   echo 0
+   echo "1"
 else
-   echo 1
+   echo "0"
 fi

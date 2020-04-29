@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <zabbix_export>
     <version>4.4</version>
-    <date>2020-04-25T12:53:32Z</date>
+    <date>2020-04-29T14:44:57Z</date>
     <groups>
         <group>
             <name>Templates</name>
@@ -25,6 +25,23 @@ https://github.com/lgn87/zabbix-imply-template</description>
                 </application>
             </applications>
             <items>
+                <item>
+                    <name>Uber failed tasks</name>
+                    <key>imply.overlord.uberfailedtasks[{HOST.IP}]</key>
+                    <delay>15m</delay>
+                    <applications>
+                        <application>
+                            <name>Imply</name>
+                        </application>
+                    </applications>
+                    <triggers>
+                        <trigger>
+                            <expression>{last()}&gt;0</expression>
+                            <name>Uber failed tasks &gt; 1</name>
+                            <priority>AVERAGE</priority>
+                        </trigger>
+                    </triggers>
+                </item>
                 <item>
                     <name>Imply Overlord status</name>
                     <type>SIMPLE</type>
@@ -103,7 +120,7 @@ https://github.com/lgn87/zabbix-imply-template</description>
             <macros>
                 <macro>
                     <macro>{$IMPLY_PASSWORD}</macro>
-                    <value>PASSWORD</value>
+                    <value>password</value>
                 </macro>
                 <macro>
                     <macro>{$IMPLY_USER}</macro>
