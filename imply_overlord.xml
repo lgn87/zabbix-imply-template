@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <zabbix_export>
     <version>4.4</version>
-    <date>2020-04-29T14:44:57Z</date>
+    <date>2020-09-01T14:51:45Z</date>
     <groups>
         <group>
             <name>Templates</name>
@@ -26,8 +26,42 @@ https://github.com/lgn87/zabbix-imply-template</description>
             </applications>
             <items>
                 <item>
+                    <name>Adevents failed tasks</name>
+                    <key>imply.overlord.uberfailedtasks[{HOST.IP}, adevents, 4]</key>
+                    <delay>15m</delay>
+                    <applications>
+                        <application>
+                            <name>Imply</name>
+                        </application>
+                    </applications>
+                    <triggers>
+                        <trigger>
+                            <expression>{last()}&gt;=1</expression>
+                            <name>Adevents tasks failed &gt;=1</name>
+                            <priority>AVERAGE</priority>
+                        </trigger>
+                    </triggers>
+                </item>
+                <item>
+                    <name>Auction-tracking failed tasks</name>
+                    <key>imply.overlord.uberfailedtasks[{HOST.IP}, auction-tracking, 8]</key>
+                    <delay>15m</delay>
+                    <applications>
+                        <application>
+                            <name>Imply</name>
+                        </application>
+                    </applications>
+                    <triggers>
+                        <trigger>
+                            <expression>{last()}&gt;=1</expression>
+                            <name>Auction-tracking tasks failed &gt;=1</name>
+                            <priority>AVERAGE</priority>
+                        </trigger>
+                    </triggers>
+                </item>
+                <item>
                     <name>Uber failed tasks</name>
-                    <key>imply.overlord.uberfailedtasks[{HOST.IP}]</key>
+                    <key>imply.overlord.uberfailedtasks[{HOST.IP}, uber, 16]</key>
                     <delay>15m</delay>
                     <applications>
                         <application>
@@ -38,6 +72,40 @@ https://github.com/lgn87/zabbix-imply-template</description>
                         <trigger>
                             <expression>{last()}&gt;0</expression>
                             <name>Uber failed tasks &gt; 1</name>
+                            <priority>AVERAGE</priority>
+                        </trigger>
+                    </triggers>
+                </item>
+                <item>
+                    <name>User-acquisition failed tasks</name>
+                    <key>imply.overlord.uberfailedtasks[{HOST.IP}, user-acquisition, 2]</key>
+                    <delay>15m</delay>
+                    <applications>
+                        <application>
+                            <name>Imply</name>
+                        </application>
+                    </applications>
+                    <triggers>
+                        <trigger>
+                            <expression>{last()}&gt;=1</expression>
+                            <name>User-acquisition tasks failed &gt;=1</name>
+                            <priority>AVERAGE</priority>
+                        </trigger>
+                    </triggers>
+                </item>
+                <item>
+                    <name>Win-rate failed tasks</name>
+                    <key>imply.overlord.uberfailedtasks[{HOST.IP}, win-rate, 8]</key>
+                    <delay>15m</delay>
+                    <applications>
+                        <application>
+                            <name>Imply</name>
+                        </application>
+                    </applications>
+                    <triggers>
+                        <trigger>
+                            <expression>{last()}&gt;=1</expression>
+                            <name>Win-rate tasks failed &gt;=1</name>
                             <priority>AVERAGE</priority>
                         </trigger>
                     </triggers>
@@ -162,3 +230,4 @@ https://github.com/lgn87/zabbix-imply-template</description>
         </trigger>
     </triggers>
 </zabbix_export>
+
